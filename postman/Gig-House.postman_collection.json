@@ -1,0 +1,686 @@
+{
+  "info": {
+    "name": "Gig House - Local API",
+    "description": "Run requests individually. Login as the required role first; login automatically saves the active token. Set opportunity_id, worker_id and engagement_id to the records you intend to use. Mutating requests change the local app database. Choose a file in upload requests before sending. Delivery attachments must belong to the signed-in worker and selected funded gig. The welcome email is queued when an account is created.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "auth": {
+    "type": "apikey",
+    "apikey": [
+      {
+        "key": "key",
+        "value": "Authorization",
+        "type": "string"
+      },
+      {
+        "key": "value",
+        "value": "Token {{token}}",
+        "type": "string"
+      },
+      {
+        "key": "in",
+        "value": "header",
+        "type": "string"
+      }
+    ]
+  },
+  "variable": [
+    {
+      "key": "base_url",
+      "value": "http://127.0.0.1:8001/api/",
+      "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "demo_password",
+      "value": "FlipDemo!2026",
+      "type": "string"
+    },
+    {
+      "key": "search",
+      "value": "Amina",
+      "type": "string"
+    },
+    {
+      "key": "user_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "worker_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "profile_slug",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "opportunity_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "engagement_id",
+      "value": "",
+      "type": "string"
+    },
+    {
+      "key": "attachment_id",
+      "value": "",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1 - Authentication",
+      "item": [
+        {
+          "name": "Login - worker",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}auth/login/",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"amina@flip.demo\",\n  \"password\": \"{{demo_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login succeeded\", function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code === 200) {",
+                  " const data = pm.response.json();",
+                  " pm.collectionVariables.set(\"token\", data.token);",
+                  " pm.collectionVariables.set(\"user_id\", data.user.id);",
+                  " if (data.user.profile.role === \"worker\") pm.collectionVariables.set(\"worker_id\", data.user.id);",
+                  " if (data.user.profile.page_slug) pm.collectionVariables.set(\"profile_slug\", data.user.profile.page_slug);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - employer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}auth/login/",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"employer@flip.demo\",\n  \"password\": \"{{demo_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login succeeded\", function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code === 200) {",
+                  " const data = pm.response.json();",
+                  " pm.collectionVariables.set(\"token\", data.token);",
+                  " pm.collectionVariables.set(\"user_id\", data.user.id);",
+                  " if (data.user.profile.role === \"worker\") pm.collectionVariables.set(\"worker_id\", data.user.id);",
+                  " if (data.user.profile.page_slug) pm.collectionVariables.set(\"profile_slug\", data.user.profile.page_slug);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Login - admin",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}auth/login/",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"email\": \"admin@flip.demo\",\n  \"password\": \"{{demo_password}}\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Login succeeded\", function () { pm.response.to.have.status(200); });",
+                  "if (pm.response.code === 200) {",
+                  " const data = pm.response.json();",
+                  " pm.collectionVariables.set(\"token\", data.token);",
+                  " pm.collectionVariables.set(\"user_id\", data.user.id);",
+                  " if (data.user.profile.role === \"worker\") pm.collectionVariables.set(\"worker_id\", data.user.id);",
+                  " if (data.user.profile.page_slug) pm.collectionVariables.set(\"profile_slug\", data.user.profile.page_slug);",
+                  "}"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Register a new worker - choose a unique email first",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}auth/register/",
+            "auth": {
+              "type": "noauth"
+            },
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"New Member\",\n  \"email\": \"CHANGE-ME@example.com\",\n  \"role\": \"worker\",\n  \"password\": \"ChooseStrong!2026\",\n  \"confirm_password\": \"ChooseStrong!2026\"\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Account created\", function () { pm.response.to.have.status(201); });",
+                  "if (pm.response.code === 201) { const data = pm.response.json(); pm.collectionVariables.set(\"token\", data.token); pm.collectionVariables.set(\"worker_id\", data.user.id); pm.collectionVariables.set(\"user_id\", data.user.id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "My authenticated account",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}me/"
+          }
+        },
+        {
+          "name": "Logout current token",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}auth/logout/",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) pm.collectionVariables.unset(\"token\");"
+                ]
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "name": "2 - Profiles and people",
+      "item": [
+        {
+          "name": "Search people",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}people/?q={{search}}"
+          }
+        },
+        {
+          "name": "View a member",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}people/{{worker_id}}/"
+          }
+        },
+        {
+          "name": "My profile",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}me/"
+          }
+        },
+        {
+          "name": "Public profile - no authentication",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}profiles/public/{{profile_slug}}/",
+            "auth": {
+              "type": "noauth"
+            }
+          }
+        },
+        {
+          "name": "Upload my profile photo",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{base_url}}me/photo/",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          }
+        },
+        {
+          "name": "My documents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}documents/"
+          }
+        },
+        {
+          "name": "My business - employer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}business/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "3 - Opportunities and matching",
+      "item": [
+        {
+          "name": "List opportunities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}opportunities/"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) { const rows = pm.response.json(); if (rows.length && !pm.collectionVariables.get(\"opportunity_id\")) pm.collectionVariables.set(\"opportunity_id\", rows[0].id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Opportunity details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}opportunities/{{opportunity_id}}/"
+          }
+        },
+        {
+          "name": "Matching candidates - employer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}opportunities/{{opportunity_id}}/candidates/"
+          }
+        },
+        {
+          "name": "Express interest - worker",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}opportunities/{{opportunity_id}}/interest/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"message\": \"I am interested and available for this opportunity.\",\n  \"confirm_availability\": true\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "My expressions of interest",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}interests/"
+          }
+        },
+        {
+          "name": "Add worker to shortlist - employer",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}opportunities/{{opportunity_id}}/shortlist/{{worker_id}}/",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "My shortlist - employer",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}shortlists/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "4 - Delivery and payments",
+      "item": [
+        {
+          "name": "List my engagements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}engagements/"
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 200) { const rows = pm.response.json(); if (rows.length && !pm.collectionVariables.get(\"engagement_id\")) pm.collectionVariables.set(\"engagement_id\", rows[0].id); }"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "Upload delivery file - worker, funded gig",
+          "request": {
+            "method": "POST",
+            "header": [],
+            "url": "{{base_url}}engagements/{{engagement_id}}/attachments/",
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                }
+              ]
+            }
+          },
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "if (pm.response.code === 201) pm.collectionVariables.set(\"attachment_id\", pm.response.json().id);"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "View delivery attachments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}engagements/{{engagement_id}}/attachments/"
+          }
+        },
+        {
+          "name": "Submit completed work - worker",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}engagements/{{engagement_id}}/submit/",
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"submission\": \"Completed the agreed deliverables. Please review the attached work.\",\n  \"links\": [\n    \"https://example.com/portfolio\"\n  ],\n  \"attachment_ids\": [\n    {{attachment_id}}\n  ]\n}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        },
+        {
+          "name": "Payment records",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}payments/"
+          }
+        },
+        {
+          "name": "My payout details",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}payout-account/"
+          }
+        }
+      ]
+    },
+    {
+      "name": "5 - Notifications",
+      "item": [
+        {
+          "name": "My notifications",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}notifications/"
+          }
+        },
+        {
+          "name": "Notification preferences",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}notifications/preferences/"
+          }
+        },
+        {
+          "name": "Mark all notifications read",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "url": "{{base_url}}notifications/read-all/",
+            "body": {
+              "mode": "raw",
+              "raw": "{}",
+              "options": {
+                "raw": {
+                  "language": "json"
+                }
+              }
+            }
+          }
+        }
+      ]
+    },
+    {
+      "name": "6 - System admin",
+      "item": [
+        {
+          "name": "Admin overview",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/overview/"
+          }
+        },
+        {
+          "name": "Admin businesses",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/businesses/"
+          }
+        },
+        {
+          "name": "Admin documents",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/documents/"
+          }
+        },
+        {
+          "name": "Admin users",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/users/"
+          }
+        },
+        {
+          "name": "Admin opportunities",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/opportunities/"
+          }
+        },
+        {
+          "name": "Admin engagements",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/engagements/"
+          }
+        },
+        {
+          "name": "Admin payments",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/payments/"
+          }
+        },
+        {
+          "name": "Admin email queue",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/emails/"
+          }
+        },
+        {
+          "name": "Admin audit log",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{base_url}}system/audit/"
+          }
+        }
+      ]
+    }
+  ]
+}
