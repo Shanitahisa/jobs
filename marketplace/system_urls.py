@@ -1,0 +1,3 @@
+from django.urls import path
+from . import system_views as v
+urlpatterns=[path('overview/',v.overview),path('businesses/',v.businesses),path('businesses/<int:pk>/',v.review_business),path('documents/',v.documents),path('documents/<int:pk>/',v.review_document),path('users/',v.users),path('users/<int:pk>/',v.user_status),path('opportunities/',v.opportunities),path('opportunities/<int:pk>/',v.moderate_opportunity),path('engagements/',v.engagements),path('engagements/<int:pk>/',v.resolve_dispute),path('payments/',v.payments),path('emails/',v.emails),path('emails/<int:pk>/retry/',v.retry_email),path('audit/',v.audit_log)]

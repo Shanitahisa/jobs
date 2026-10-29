@@ -1,0 +1,7 @@
+Django>=6.0,<6.2
+djangorestframework>=3.16,<4
+django-cors-headers>=4.6,<5
+psycopg[binary]>=3.2,<4
+pypdf>=5,<7
+requests>=2.32,<3
+Pillow>=11,<14

@@ -1,0 +1,6 @@
+FICTIONAL DEMO DOCUMENT
+Profession: Photographer
+Certificate: Fictional professional photography course
+
+For testing profession certification uploads and admin verification only.
+This is not a genuine qualification.

@@ -1,0 +1,6 @@
+FICTIONAL DEMO DOCUMENT
+Business: Demo Creative Studio
+Licence: FICTIONAL-LICENCE-2026-002
+
+This file demonstrates a trading licence upload.
+It is not a genuine licence and must never be used as one.
